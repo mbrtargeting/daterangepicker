@@ -770,6 +770,13 @@
                 }
             }
 
+            var effectiveEndDate = this.endDate;
+            //make the endDate exclusive if the time is midnight
+            if (effectiveEndDate != null && effectiveEndDate.hours() === 0 
+                    && effectiveEndDate.minutes() === 0 && effectiveEndDate.seconds === 0) {
+                effectiveEndDate = effectiveEndDate.subtract(1, 'day');
+            }
+
             for (var row = 0; row < 6; row++) {
                 html += '<tr>';
 
@@ -812,11 +819,11 @@
                         classes.push('active', 'start-date');
 
                     //highlight the currently selected end date
-                    if (this.endDate != null && calendar[row][col].format('YYYY-MM-DD') == this.endDate.format('YYYY-MM-DD'))
+                    if (effectiveEndDate != null && calendar[row][col].format('YYYY-MM-DD') == effectiveEndDate.format('YYYY-MM-DD'))
                         classes.push('active', 'end-date');
 
                     //highlight dates in-between the selected dates
-                    if (this.endDate != null && calendar[row][col] > this.startDate && calendar[row][col] < this.endDate)
+                    if (effectiveEndDate != null && calendar[row][col] > this.startDate && calendar[row][col] < effectiveEndDate)
                         classes.push('in-range');
 
                     //apply custom classes for this date
